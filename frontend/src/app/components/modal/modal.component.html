@@ -1,0 +1,13 @@
+<div class="modal-backdrop" *ngIf="visible">
+  <div class="modal-panel">
+    <div class="modal-header">
+      <strong>{{ title }}</strong>
+    </div>
+    <div class="modal-body">
+      <p [innerText]="message"></p>
+    </div>
+    <div class="modal-actions">
+      <button type="button" class="ok-btn" (click)="close()">OK</button>
+    </div>
+  </div>
+</div>

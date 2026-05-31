@@ -1,0 +1,232 @@
+<div class="drop-shell">
+
+  <!-- HERO -->
+
+  <div class="hero-top">
+
+    <div class="hero-badge">
+      ⚡ Conversão rápida • Seguro • Sem instalação
+    </div>
+
+    <h1 class="hero-title">
+      Transforme arquivos em PDF
+    </h1>
+
+    <p class="hero-subtitle">
+      Arraste ou selecione documentos e imagens para converter instantaneamente.
+    </p>
+
+  </div>
+
+  <!-- DROP ZONE -->
+
+  <div
+    class="drop-zone"
+    [class.dragging]="isDragging"
+    (drop)="onDrop($event)"
+    (dragover)="onDragOver($event)"
+    (dragleave)="isDragging = false"
+  >
+
+    <input
+      type="file"
+      multiple
+      (change)="onFileSelected($event)"
+      accept=".txt,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.png,.jpeg,.jpg,.pdf"
+      [disabled]="isConverting"
+    />
+
+    <div class="drop-content">
+
+      <div class="upload-icon">
+        ⬆️
+      </div>
+
+      <h2>
+        Arraste arquivos aqui
+      </h2>
+
+      <p>
+        ou clique para selecionar arquivos
+      </p>
+
+      <div class="supported-types">
+        DOUMENTOS • PLANILHAS • APRESENTAÇÕES • IMAGENS (PNG, JPG, JPEG)
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- STATS -->  
+
+  <!-- OPTIONS -->
+
+  <div class="options">
+
+    <label class="option-card">
+
+      <input
+        type="radio"
+        name="mode"
+        value="individual"
+        [(ngModel)]="selectedMode"
+        [disabled]="isConverting"
+      />
+
+      <div class="option-content">
+
+        <strong>
+          PDF Individual
+        </strong>
+
+        <small>
+          Um PDF para cada arquivo
+        </small>
+
+      </div>
+
+    </label>
+
+    <label class="option-card">
+
+      <input
+        type="radio"
+        name="mode"
+        value="combined"
+        [(ngModel)]="selectedMode"
+        [disabled]="isConverting"
+      />
+
+      <div class="option-content">
+
+        <strong>
+          PDF Único
+        </strong>
+
+        <small>
+          Todos os arquivos juntos
+        </small>
+
+      </div>
+
+    </label>
+
+  </div>
+
+  <!-- FILE LIST -->
+
+  <div
+    *ngIf="selectedFiles.length"
+    class="file-list"
+  >
+
+    <div class="list-header">
+
+      <h3>
+        Arquivos selecionados
+      </h3>
+
+      <div class="list-stats">
+        <span>
+          Tamanho total: {{ totalSizeMB | number:'1.1-1' }} MB
+        </span>
+        <span [class.file-limit-warning]="fileCount >= 45">
+          Arquivos: {{ fileCount }}/50
+        </span>
+      </div>
+
+      <button
+        type="button"
+        class="clear-button"
+        (click)="clearFiles()"
+        [disabled]="isConverting || !selectedFiles.length"
+      >
+        Limpar tudo
+      </button>
+
+    </div>
+
+    <!-- Quando há mais de 5 arquivos, mostrar grid de miniaturas -->
+    <div *ngIf="selectedFiles.length > 5" class="thumbnail-grid">
+      <div *ngFor="let item of selectedFiles" class="thumb-item">
+        <div class="thumb-preview">
+          <img *ngIf="item.isImage && item.preview" [src]="item.preview" alt="thumb" class="thumb-img" />
+          <div *ngIf="!item.isImage" class="thumb-fallback">
+            <div class="file-icon">📄</div>
+            <div class="thumb-name" [title]="item.file.name">{{ getTruncatedFileName(item.file.name, 16) }}</div>
+          </div>
+          <button type="button" class="thumb-remove" (click)="removeFile(item.id)">✕</button>
+        </div>
+        <div class="thumb-meta">
+          <!-- <div class="thumb-filename" [title]="item.file.name">{{ item.file.name }}</div> -->
+          <div class="thumb-size">{{ item.file.size / 1024 / 1024 | number:'1.1-1' }} MB</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Lista padrão quando <= 5 arquivos -->
+    <ul *ngIf="selectedFiles.length <= 5"
+      class="file-list-draggable"
+      cdkDropList
+      (cdkDropListDropped)="drop($event)"
+    >
+
+      <li
+        *ngFor="let item of selectedFiles"
+        cdkDrag
+      >
+
+        <div class="file-info">
+
+          <div class="file-icon">
+            📄
+          </div>
+
+          <div class="file-meta">
+
+            <strong [title]="item.file.name">
+              {{ getTruncatedFileName(item.file.name, 80) }}
+            </strong>
+
+            <span>
+              {{ item.file.size / 1024 / 1024 | number:'1.1-1' }} MB
+            </span>
+
+          </div>
+
+        </div>
+
+        <div class="file-actions">
+
+          <button
+            type="button"
+            class="remove-btn"
+            (click)="removeFile(item.id)"
+            [disabled]="isConverting"
+          >
+            ✕
+          </button>
+
+        </div>
+
+      </li>
+
+    </ul>
+
+  </div>
+
+  <!-- BUTTON -->
+
+  <button
+    type="button"
+    (click)="convert()"
+    class="convert-button"
+    [disabled]="isConverting || !selectedFiles.length"
+  >
+
+    {{ isConverting ? 'Convertendo...' : 'Converter para PDF' }}
+
+  </button>
+
+</div>

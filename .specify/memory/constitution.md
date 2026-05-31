@@ -1,50 +1,65 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+<!--
+Sync Impact Report
+Version change: none → 1.0.0
+Modified principles:
+- Added: Small Project Scope
+- Added: Clean Code First
+- Added: Minimal Architecture
+- Added: No Automated Tests
+- Added: Documented Simplicity
+Added sections:
+- Additional Constraints
+- Development Workflow
+Templates updated:
+- ✅ .specify/templates/plan-template.md
+- ✅ .specify/templates/spec-template.md
+- ✅ .specify/templates/tasks-template.md
+Follow-up TODOs: none
+-->
+# Docs2Pdf Constitution
 
 ## Core Principles
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### I. Small Project Scope
+The project MUST remain intentionally small: a single, focused deliverable with minimal dependencies
+and no unneeded subsystems. Feature scope MUST be limited to the essential path, and scope expansion
+MUST be evaluated as separate work.
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+### II. Clean Code First
+All code MUST be readable, expressive, and easy to navigate. Naming and structure MUST favor clarity over
+cleverness, functions and modules MUST do one thing, and complex logic MUST be split into smaller, explicit
+units.
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+### III. Minimal Architecture
+Design decisions MUST prioritize direct, simple implementations over frameworks, abstractions, and
+indirection. Architecture MUST emerge from the smallest working solution, not from large upfront design.
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+### IV. No Automated Tests
+This project MUST not include an automated test suite. Quality and correctness MUST be assured through
+manual verification, examples, code review, and lightweight documentation rather than automated testing.
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+### V. Documented Simplicity
+Code and design choices MUST be documented with concise explanations and usage examples. Documentation MUST
+explain the simplest path to use or extend the project without requiring additional hidden knowledge.
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+## Additional Constraints
+- The implementation MUST stay small and maintainable: avoid multi-package or multi-repo structure.
+- External dependencies MUST be minimal and justified by direct project needs.
+- Automated tests are excluded from the baseline project workflow; manual verification is the expected quality gate.
+- Keep the runtime footprint lean and limit the number of files to what is needed for a small, clean implementation.
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
-
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
-
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+## Development Workflow
+- Start each change with a clearly scoped requirement and the smallest workable implementation.
+- Implement in small increments, then perform manual validation and code review before expanding scope.
+- Prefer direct command-line examples, sample inputs, or explicit manual checks over automated test artifacts.
+- Any added complexity MUST include a short rationale and be removed if it does not clearly improve clarity or maintainability.
 
 ## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
+This constitution is the authoritative guide for project decisions. All development choices MUST align with
+these principles. Amendments require an explicit update to this constitution, a brief rationale, and a review
+by the project owner or maintainer.
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+Every implementation change MUST state which core principle it supports and how it preserves project simplicity.
+When a principle appears at risk, the change MUST be simplified or deferred.
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+**Version**: 1.0.0 | **Ratified**: 2026-05-23 | **Last Amended**: 2026-05-23

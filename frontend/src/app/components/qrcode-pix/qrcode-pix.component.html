@@ -1,0 +1,38 @@
+<div class="qrcode-backdrop" *ngIf="isOpen" (click)="close()">
+  <div class="qrcode-modal" (click)="$event.stopPropagation()">
+    <div class="qrcode-header">
+      <h3>Doação via Pix</h3>
+      <button type="button" class="close-btn" (click)="close()">✕</button>
+    </div>
+    
+    <div class="qrcode-content">
+      <p class="qrcode-description">
+        Se essa ferramenta foi útil para você, considere fazer uma pequena doação via Pix. 
+        Isso nos ajuda a cobrir os custos de hospedagem e manutenção.
+      </p>
+      
+      <div class="qrcode-container">
+        <!-- Substitua 'pix-qrcode.png' pela imagem real do seu QR code -->
+        <img 
+          src="assets/pix-qrcode.png" 
+          alt="QR Code Pix" 
+          class="qrcode-image"
+          onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22300%22%3E%3Crect fill=%22%23f0f0f0%22 width=%22300%22 height=%22300%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 font-size=%2220%22 fill=%22%23999%22 text-anchor=%22middle%22 dy=%22.3em%22%3EQR Code aqui%3C/text%3E%3C/svg%3E'"
+        />
+      </div>
+      
+      <p class="qrcode-key">
+        <strong>Chave Pix:</strong><br>
+        <code>sua-chave-pix.exemplo.com</code>
+      </p>
+      
+      <p class="qrcode-thanks">
+        Obrigado! 💙
+      </p>
+    </div>
+    
+    <div class="qrcode-actions">
+      <button type="button" class="close-modal-btn" (click)="close()">Fechar</button>
+    </div>
+  </div>
+</div>

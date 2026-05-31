@@ -1,0 +1,176 @@
+<div class="app-background">
+
+  <div class="background-glow glow-1"></div>
+  <div class="background-glow glow-2"></div>
+
+  <div class="app-shell">
+
+    <!-- HEADER -->
+
+    <header class="hero-header">
+
+      <div class="logo-badge">
+        PDF
+      </div>
+
+      <h1>
+        Docs2Pdf
+      </h1>
+
+      <p>
+        Converta documentos e imagens para PDF com rapidez,
+        organização e visualização instantânea (limitado a 500MB ou 50 arquivos).
+      </p>
+
+      <p>
+        Esta ferramenta, surgiu da necessidade da minha esposa (professora) de converter diversos 
+        arquivos para PDF, e como não encontrou uma solução simples e eficiente, decidi criar esta 
+        aplicação para resolver esse problema de forma rápida e segura.
+        <!-- Se de alguma forma esta ferramenta for útil para você, sinta-se à vontade para nos fazer uma pequena doação,
+        através do QR code abaixo. Isso ajuda a cobrir os custos de hospedagem e manutenção. -->
+      </p>
+
+      <!-- <button 
+        type="button" 
+        class="donate-button"
+        (click)="openQrCode()"
+        title="Abrir QR code para doação via Pix"
+      >
+        💙 Fazer uma doação
+      </button> -->
+
+    </header>
+
+    <!-- FILE DROP -->
+
+    <app-file-drop
+      (pdfReady)="onPdfReady($event)"
+      (errorMessage)="onError($event)"
+      (loadingState)="onLoading($event)">
+    </app-file-drop>
+
+    <!-- LOADING -->
+
+    <div
+      *ngIf="loading"
+      class="status-box status-loading"
+    >
+
+      <div class="spinner"></div>
+
+      <div class="status-content">
+
+        <strong>
+          Convertendo arquivos...
+        </strong>
+
+        <span>
+          O backend pode demorar no primeiro acesso devido ao cold start.
+        </span>
+
+      </div>
+      
+      </div>
+
+    <!-- RESULTS -->
+
+    <div
+      *ngIf="pdfResults.length"
+      class="preview-panel"
+    >
+
+      <div class="preview-header">
+
+        <div>
+
+          <h2>
+            PDF(s) Gerado(s)
+          </h2>
+
+          <p>
+            Visualize ou faça download dos arquivos convertidos.
+          </p>
+
+        </div>
+
+      </div>
+
+      <!-- PDF LIST -->
+
+      <div
+        *ngFor="let pdf of pdfResults; index as i"
+        class="pdf-card"
+        [class.active]="selectedPdfIndex === i"
+      >
+
+        <div class="pdf-row">
+
+          <div class="pdf-info">
+
+            <div class="pdf-icon">
+              📕
+            </div>
+
+            <div class="pdf-meta">
+
+              <strong>
+                {{ pdf.fileName }}
+              </strong>
+
+              <span>
+                PDF convertido com sucesso
+              </span>
+
+            </div>
+
+          </div>
+
+          <div class="pdf-actions">
+
+            <button
+              type="button"
+              class="view-button"
+              (click)="selectPreview(i)"
+              [disabled]="selectedPdfIndex === i"
+            >
+
+              {{ selectedPdfIndex === i ? 'Visualizando' : 'Visualizar' }}
+
+            </button>
+
+            <a
+              [href]="pdf.data"
+              [download]="pdf.fileName"
+              class="download-link"
+            >
+              Baixar
+            </a>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- PDF VIEWER -->
+
+      <div class="pdf-viewer">
+
+        <div class="viewer-header">
+          Pré-visualização do PDF
+        </div>
+
+        <iframe
+          [src]="trustedUrl"
+        ></iframe>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+  <app-modal></app-modal>
+  <app-qrcode-pix></app-qrcode-pix>

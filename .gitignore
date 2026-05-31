@@ -1,0 +1,21 @@
+# Root ignore file
+node_modules/
+**/node_modules/
+dist/
+build/
+**/bin/
+**/obj/
+*.log
+*.vs/
+.vscode/
+*.user
+*.suo
+*.tmp
+*.pid
+*.seed
+*.cache
+.DS_Store
+Thumbs.db
+.env*
+backup/
+specs/
