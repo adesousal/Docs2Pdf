@@ -576,4 +576,9 @@
   .pdf-viewer iframe {
     height: 65vh;
   }
+
+  /* Esconder visualização em telas pequenas (mobile e tablets portrait) */
+  .pdf-viewer {
+    display: none;
+  }
 }

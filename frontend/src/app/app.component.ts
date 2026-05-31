@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, HostListener } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { PdfResult } from './models/pdf-result.model';
 import { QrCodePixComponent } from './components/qrcode-pix/qrcode-pix.component';
@@ -18,7 +18,41 @@ export class AppComponent {
 
   @ViewChild(QrCodePixComponent) qrCodeModal?: QrCodePixComponent;
 
+  // true quando a largura da viewport for igual ou menor que 768px
+  isMobile = window.innerWidth <= 768;
+
   constructor(private sanitizer: DomSanitizer) {}
+
+  @HostListener('window:resize')
+  onResize() {
+    this.isMobile = window.innerWidth <= 768;
+  }
+
+  getViewLabel(index: number) {
+    if (this.isMobile) {
+      return 'Abrir';
+    }
+
+    return this.selectedPdfIndex === index ? 'Visualizando' : 'Visualizar';
+  }
+
+  openOrPreview(index: number) {
+    const pdf = this.pdfResults[index];
+    if (!pdf) return;
+
+    if (this.isMobile) {
+      // em mobile, abrir em nova aba (fallback ao data URL)
+      try {
+        window.open(pdf.data, '_blank', 'noopener');
+      } catch (e) {
+        // se abrir falhar, forçar download abrindo a url no mesmo contexto
+        window.location.href = pdf.data;
+      }
+      return;
+    }
+
+    this.selectPreview(index);
+  }
 
   openQrCode() {
     if (this.qrCodeModal) {

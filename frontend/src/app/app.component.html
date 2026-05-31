@@ -130,11 +130,11 @@
             <button
               type="button"
               class="view-button"
-              (click)="selectPreview(i)"
-              [disabled]="selectedPdfIndex === i"
+              (click)="openOrPreview(i)"
+              [disabled]="!isMobile && selectedPdfIndex === i"
             >
 
-              {{ selectedPdfIndex === i ? 'Visualizando' : 'Visualizar' }}
+              {{ getViewLabel(i) }}
 
             </button>
 
