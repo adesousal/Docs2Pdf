@@ -19,3 +19,6 @@ Thumbs.db
 .env*
 backup/
 specs/
+.vscode/
+.specify/
+package-lock.json
