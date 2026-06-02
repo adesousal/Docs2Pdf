@@ -42,7 +42,7 @@ public sealed class GotenbergConversionService
         
         return env switch
         {
-            "Production" => "https://gotenberg.onrender.com",
+            "Production" => "https://gotenberg-oskv.onrender.com",
             "Staging" => "https://gotenberg-staging.onrender.com",
             _ => "http://localhost:3000"
         };
