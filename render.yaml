@@ -15,9 +15,9 @@ services:
       - key: ASPNETCORE_URLS
         value: http://+:80
       - key: GotenbergUrl
-        value: http://gotenberg:3000
+        value: https://gotenberg.onrender.com
       - key: FrontendOrigin
-        value: https://docs2pdf.onrender.com
+        value: https://docs2pdf-api.onrender.com
 
   - type: web
     name: gotenberg

@@ -75,29 +75,47 @@ A aplicação Docs2Pdf em produção usa dois serviços:
 
 ## Pontos Importantes
 
-### 1. Comunicação entre Serviços
+### 1. Comunicação entre Serviços (CRÍTICO para Plano Free)
 
-Os serviços no Render podem se comunicar usando:
-- Nome do serviço + `:` + porta interna
-- Ex: `http://gotenberg:3000` (dentro de `docs2pdf-api`)
+⚠️ **No plano Free do Render, serviços separados NÃO conseguem se comunicar por nome de host interno!**
 
-Não use `localhost` em produção!
+- ❌ `http://gotenberg:3000` → Falha: "Name or service not known"
+- ✅ `https://gotenberg.onrender.com` → Funciona: URL pública
 
-### 2. URLs Públicas
+**Por quê?**
+- Hostname interno (`gotenberg:3000`) só funciona com **Private Network** (planos pagos)
+- Plano Free: cada serviço é isolado, só pode acessar por URL pública
 
-Cada serviço recebe uma URL pública:
-- API: `https://docs2pdf-api.onrender.com`
-- Gotenberg: `https://gotenberg.onrender.com` (opcional, só interno)
+**Solução implementada:**
+```csharp
+// No GotenbergConversionService
+_gotenbergUrl = configuration["GotenbergUrl"] 
+    ?? (env == "Production" ? "https://gotenberg.onrender.com" : "http://localhost:3000");
+```
 
-### 3. Configuração de Ambiente
+### 2. URLs Públicas vs Privadas
 
-A variável `GotenbergUrl` deve ser:
-- **Desenvolvimento local**: `http://localhost:3000`
-- **Produção Render**: `http://gotenberg:3000`
+| Ambiente | Gotenberg URL | Notas |
+|----------|---|---|
+| **Local** | `http://localhost:3000` | Docker Compose |
+| **Render Free** | `https://gotenberg.onrender.com` | ✅ URL pública obrigatória |
+| **Render Starter+** | `http://gotenberg:3000` | Opcional: usar Private Network |
 
-Isso já está configurado no arquivo `render.yaml`.
+### 3. Nomes dos Serviços Render
 
-### 4. Limites do Plano Free
+Quando criar no Render, use **exatamente** estes nomes:
+- `docs2pdf-api` → públicamente acessível em `https://docs2pdf-api.onrender.com`
+- `gotenberg` → públicamente acessível em `https://gotenberg.onrender.com`
+
+### 4. Variáveis de Ambiente
+
+**No `render.yaml` ou manualmente:**
+```
+GotenbergUrl=https://gotenberg.onrender.com
+FrontendOrigin=https://docs2pdf-api.onrender.com
+```
+
+⚠️ **Importante:** Use `https://` para produção (obrigatório no Render).
 
 - Spin-down após 15 min de inatividade
 - Limite de memória: ~512MB por serviço
@@ -122,31 +140,35 @@ curl -X POST https://docs2pdf-api.onrender.com/api/convert \
 
 ## Troubleshooting
 
-### "Connection refused (localhost:3000)"
+### "Name or service not known (gotenberg:3000)"
 
-- ✗ API está tentando usar `localhost`
-- ✓ Solução: Verificar se `GotenbergUrl` está configurado como variável de ambiente
+- ✗ **Causa:** Tentando usar hostname interno em plano Free
+- ✓ **Solução:** 
+  1. Verificar nome do serviço Gotenberg no Render (deve ser `gotenberg`)
+  2. Verificar variável `GotenbergUrl` está como `https://gotenberg.onrender.com`
+  3. Aguardar ~30s para o serviço ficar disponível (spin-down)
+  4. Tentar novamente
+
+### "Connection refused (localhost:3000)" (Produção)
+
+- ✗ **Causa:** Localhost não existe em ambiente Render
+- ✓ **Solução:** Verificar `ASPNETCORE_ENVIRONMENT=Production` está definido
+  - Se Development, carrega `appsettings.json` (localhost)
+  - Se Production, carrega `appsettings.Production.json` (HTTPS públicas)
 
 ### "502 Bad Gateway"
 
-- Possível: Gotenberg está em spin-down
-- Aguarde alguns segundos e tente novamente
+- Possível: Serviço em spin-down ou inicializando
+- Aguarde 30-60 segundos e tente novamente
+- Verifique logs no Render Dashboard
 
 ### "Conversion timeout"
 
-- Aumentar o plan ou otimizar conversão
-- Considere usar plano Starter
+- Timeout padrão aumentado para 30s (era 5s)
+- Se ainda ocorrer, considere plano Starter
 
-## Rollback
+### "HTTPS certificate error"
 
-Se algo der errado:
-
-1. Remova os serviços do Render
-2. Volte para a última versão funcional
-3. Redeploye com ajustes
-
-```bash
-git log --oneline  # Ver commits
-git revert <commit-hash>
-git push origin main
-```
+- Render usa certificado válido automaticamente
+- Se ver erro de certificado, é possivelmente firewall local
+- Em produção: deve funcionar normalmente
