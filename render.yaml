@@ -1,0 +1,31 @@
+services:
+  - type: web
+    name: docs2pdf-api
+    env: docker
+    repo: https://github.com/adesousal/Docs2Pdf
+    branch: main
+    dockerfilePath: ./backend/Dockerfile.gotenberg
+    dockerContext: ./backend
+    plan: free
+    healthCheckPath: /api/convert/health
+    numInstances: 1
+    envVars:
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
+      - key: ASPNETCORE_URLS
+        value: http://+:80
+      - key: GotenbergUrl
+        value: http://gotenberg:3000
+      - key: FrontendOrigin
+        value: https://docs2pdf.onrender.com
+
+  - type: web
+    name: gotenberg
+    image: gotenberg/gotenberg:8.7
+    plan: free
+    numInstances: 1
+    envVars:
+      - key: LOG_LEVEL
+        value: info
+    healthCheckPath: /health
+    startCommand: gotenberg

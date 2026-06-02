@@ -62,6 +62,24 @@ chmod +x quick-test.sh
 
 Para testes manuais, consulte [TESTING_EXAMPLES.md](TESTING_EXAMPLES.md)
 
+## 🌐 Deployment em Produção (Render)
+
+Para fazer deploy em produção no Render:
+
+1. **Consulte [RENDER_DEPLOYMENT.md](RENDER_DEPLOYMENT.md)** para instruções completas
+2. Resumo rápido:
+   - API e Gotenberg rodam como serviços separados
+   - Use `render.yaml` para Infrastructure as Code
+   - Configure variáveis de ambiente: `GotenbergUrl=http://gotenberg:3000`
+
+```bash
+# Depois de testar localmente
+git push origin main
+# O Render fará deploy automaticamente
+```
+
+> **Importante:** Gotenberg **não** pode ser deployado no mesmo processo da API.
+
 ## 📋 Documentação
 
 - **[QUICK_START.md](QUICK_START.md)** - Guia rápido de testes

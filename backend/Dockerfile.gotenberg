@@ -10,7 +10,9 @@ RUN dotnet publish ./Docs2Pdf.Api.csproj -c Release -o /app/publish
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
 
-ENV ASPNETCORE_URLS=http://+:${PORT:-80}
+# Use PORT if set (Render), else default to 80
+ENV PORT=80
+ENV ASPNETCORE_URLS=http://+:${PORT}
 
 # Sem LibreOffice! Gotenberg será usado como serviço externo.
 # Apenas ferramentas essenciais para fazer health checks
