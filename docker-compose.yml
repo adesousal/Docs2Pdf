@@ -1,0 +1,59 @@
+services:
+  # Gotenberg: Micro-serviço de conversão de documentos
+  # Muito mais rápido que LibreOffice - roda de forma persistente
+  # Suporta: Office (Word, Excel, PowerPoint), PDF, HTML, imagens, etc.
+  gotenberg:
+    image: gotenberg/gotenberg:8.7
+    container_name: gotenberg
+    ports:
+      - "3000:3000"
+    environment:
+      - LOG_LEVEL=INFO
+      - DISABLE_UNOCONV=false
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+    restart: unless-stopped
+
+  # API .NET que usa Gotenberg para conversões
+  api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.gotenberg
+    container_name: docs2pdf-api
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      - ASPNETCORE_URLS=http://+:80
+      - GotenbergUrl=http://gotenberg:3000
+      - FrontendOrigin=http://localhost:4200
+    depends_on:
+      gotenberg:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    restart: unless-stopped
+
+  # Frontend Angular (opcional)
+  frontend:
+    image: node:20-alpine
+    working_dir: /app
+    volumes:
+      - ./frontend:/app
+    ports:
+      - "4200:4200"
+    command: >
+      sh -c "npm install && npm start"
+    environment:
+      - NODE_ENV=development
+    depends_on:
+      - api
+    restart: unless-stopped

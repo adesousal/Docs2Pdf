@@ -14,6 +14,7 @@ build/
 *.pid
 *.seed
 *.cache
+**/.angular/cache/
 .DS_Store
 Thumbs.db
 .env*
@@ -21,4 +22,19 @@ backup/
 specs/
 .vscode/
 .specify/
+check-health.sh
 package-lock.json
+gotemberg_migration.md
+local_testing_guid.md
+ps_upload_result.pdf
+ps-upload-test.ps1
+ps-upload-test2.ps1
+quick_start.md
+quick-test.ps1
+quick-test.sh
+summary_of_changes.md
+techinical_details.md
+test.upload.txt
+test_conversion.sh
+testing_examples.md
+

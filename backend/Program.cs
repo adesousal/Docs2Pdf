@@ -25,6 +25,12 @@ builder.Services.AddCors(options =>
 
 builder.Services.AddSingleton<FileValidationService>();
 builder.Services.AddSingleton<TempFileService>();
+
+// Use Gotenberg for faster, persistent document conversion
+// Instead of spawning LibreOffice for each file, Gotenberg runs as a persistent service
+builder.Services.AddHttpClient<GotenbergConversionService>()
+    .SetHandlerLifetime(TimeSpan.FromMinutes(5));
+
 builder.Services.AddSingleton<PdfConversionService>();
 
 builder.Services.Configure<FormOptions>(options =>
