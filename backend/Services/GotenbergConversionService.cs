@@ -70,17 +70,17 @@ public sealed class GotenbergConversionService
             await file.CopyToAsync(fileStream);
             fileStream.Close();
 
-            using var fileContent = new ByteArrayContent(await File.ReadAllBytesAsync(inputPath));
-            fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/octet-stream");
-
-            using var content = new MultipartFormDataContent();
-            content.Add(fileContent, "files", file.FileName);
-
             var endpoint = DetermineEndpoint(file.FileName);
             var retryCount = 0;
 
             while (retryCount < MaxRetries)
             {
+                using var fileContent = new ByteArrayContent(await File.ReadAllBytesAsync(inputPath));
+                fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/octet-stream");
+
+                using var content = new MultipartFormDataContent();
+                content.Add(fileContent, "files", file.FileName);
+                
                 try
                 {
                     var url = $"{_gotenbergUrl}{endpoint}";
@@ -96,7 +96,10 @@ public sealed class GotenbergConversionService
                     var error = await response.Content.ReadAsStringAsync();
                     _logger.LogError($"Erro na conversão (status {response.StatusCode}): {error}");
 
-                    if (response.StatusCode == System.Net.HttpStatusCode.ServiceUnavailable)
+                    if (response.StatusCode is
+                        System.Net.HttpStatusCode.BadGateway or
+                        System.Net.HttpStatusCode.GatewayTimeout or
+                        System.Net.HttpStatusCode.ServiceUnavailable)
                     {
                         retryCount++;
                         if (retryCount < MaxRetries)
