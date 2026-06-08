@@ -35,7 +35,7 @@ services:
       gotenberg:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:80/health"]
       interval: 10s
       timeout: 5s
       retries: 3
