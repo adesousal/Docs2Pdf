@@ -38,14 +38,14 @@ public sealed class GotenbergConversionService
 
     private string DetectGotenbergUrl()
     {
-        var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Development";
-        
-        return env switch
-        {
-            "Production" => "https://gotenberg-oskv.onrender.com",
-            "Staging" => "https://gotenberg-staging.onrender.com",
-            _ => "http://localhost:3000"
-        };
+        // Tenta ler a variável configurada no Docker (http://gotenberg:3000)
+        var urlConfigurada = Environment.GetEnvironmentVariable("GotenbergUrl");
+    
+        if (!string.IsNullOrEmpty(urlConfigurada))        
+            return urlConfigurada;
+
+        // Se não encontrar a variável (ex: rodando local no Visual Studio), usa o localhost padrão
+        return "http://localhost:3000";
     }
 
     public async Task<byte[]> ConvertAsync(IFormFile file)
