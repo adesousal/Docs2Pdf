@@ -30,7 +30,7 @@ services:
     environment:
       - ASPNETCORE_URLS=http://+:80
       - GotenbergUrl=http://gotenberg:3000
-      - FrontendOrigin=http://localhost:4200
+      - FrontendOrigin=https://adesousal.github.io
     depends_on:
       gotenberg:
         condition: service_healthy
