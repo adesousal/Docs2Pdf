@@ -41,6 +41,7 @@ builder.Services.Configure<FormOptions>(options =>
 
 var app = builder.Build();
 
+app.UseRouting();
 app.UseCors();
 app.UseAuthorization();
 app.MapControllers();
