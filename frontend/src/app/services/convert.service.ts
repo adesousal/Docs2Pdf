@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpResponse, HttpHeaders } from '@angular/common/http'; // Adicionado HttpHeaders
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
@@ -15,8 +15,14 @@ export class ConvertService {
     form.append('files', file, file.name);
     const params = new HttpParams().set('combine', combine.toString());
 
+    // Configura o cabeçalho para pular o aviso do Localtonet
+    const headers = new HttpHeaders({
+      'localtonet-skip-warning': 'true'
+    });
+
     return this.http.post(this.apiUrl, form, {
       params,
+      headers, // Passando os headers aqui
       responseType: 'blob',
       observe: 'response'
     }).pipe(
@@ -29,8 +35,14 @@ export class ConvertService {
     files.forEach(file => form.append('files', file, file.name));
     const params = new HttpParams().set('combine', combine.toString());
 
+    // Configura o cabeçalho para pular o aviso do Localtonet
+    const headers = new HttpHeaders({
+      'localtonet-skip-warning': 'true'
+    });
+
     return this.http.post(this.apiUrl, form, {
       params,
+      headers, // Passando os headers aqui
       responseType: 'blob',
       observe: 'response'
     }).pipe(
