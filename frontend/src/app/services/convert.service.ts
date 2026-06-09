@@ -13,16 +13,10 @@ export class ConvertService {
   uploadFile(file: File, combine = false): Observable<Blob> {
     const form = new FormData();
     form.append('files', file, file.name);
-    const params = new HttpParams().set('combine', combine.toString());
-
-    // Configura o cabeçalho para pular o aviso do Localtonet
-    const headers = new HttpHeaders({
-      'localtonet-skip-warning': 'true'
-    });
+    const params = new HttpParams().set('combine', combine.toString());    
 
     return this.http.post(this.apiUrl, form, {
-      params,
-      headers, // Passando os headers aqui
+      params,      
       responseType: 'blob',
       observe: 'response'
     }).pipe(
