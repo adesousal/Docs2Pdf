@@ -18,7 +18,7 @@ builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy =>
     {
-        policy.WithOrigins(frontendOrigin.TrimEnd('/')) // Restringe apenas para o seu GitHub Pages
+        policy.WithOrigins(frontendOrigin) // Restringe apenas para o seu GitHub Pages
               .AllowAnyMethod()                         // Permite POST, GET, OPTIONS, etc.
               .AllowAnyHeader()                         // Permite cabeçalhos customizados (como o do Localtonet)
               .WithExposedHeaders("Content-Disposition", "Content-Length"); // Permite ao Angular ler o PDF retornado
